@@ -7,6 +7,9 @@ runs/
 *.pt
 *.jpg
 *.png
+datasets/
+
+.DS_Store
 
 # C extensions
 *.so
