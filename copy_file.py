@@ -1,26 +1,26 @@
+'''
+This program creates a dataset with a directory structure suitable for training in YOLOv8 from a downloaded dataset.
+Original dataset can be downloaded from the link below.
+https://www.kaggle.com/datasets/aditya276/face-mask-dataset-yolo-format
+'''
 import os
-from shutil import copy
-import glob
+import shutil
 
-def run(label_list, image, dest):
-    os.makedirs(dest, exist_ok=True)
-    for file in label_list:
-        basename = os.path.splitext(os.path.basename(file))[0]
-        # dirname = os.path.dirname(file)
-        try:
-            copy(os.path.join(image, f"{basename}.jpg"), dest)
-            # print(f"copied {basename}.jpg to {dest}")
-        except BaseException as e:
-            print(e)
+src_dirs = [f"dataset/images/{dirname}" for dirname in ["test", "train", "valid"]]
+dst_dirs_texts = ["datasets/label/test", "datasets/label/train", "datasets/label/valid"]
+dst_dirs_images = ["datasets/images/test", "datasets/images/train", "datasets/images/valid"]
+image_type = (".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG")
 
+for dst in dst_dirs_texts + dst_dirs_images:
+    if not os.path.exists(dst):
+        os.makedirs(dst)
 
-def main():
-    LABEL_SOURCE = "Label"
-    IMAGE_SOURCE = "JPGFiles"
-    DESTINATION = "Images"
-    files = glob.glob(os.path.join(LABEL_SOURCE, "*.txt"))
-    print(len(files))
-    run(label_list=files, image=IMAGE_SOURCE, dest=DESTINATION)
-
-if __name__ == "__main__":
-    main()
+for src, dst_text, dst_image in zip(src_dirs, dst_dirs_texts, dst_dirs_images):
+    for filename in os.listdir(src):
+        src_path = os.path.join(src, filename)
+        if filename.endswith(".txt"):
+            shutil.copy(src_path, dst_text)
+            print(f"Copied {src_path} -> {dst_text}")
+        elif filename.endswith(image_type):
+            shutil.copy(src_path, dst_image)
+            print(f"Copied {src_path} -> {dst_image}")
