@@ -7,7 +7,7 @@ runs/
 *.pt
 *.jpg
 *.png
-datasets/
+dataset*/
 
 .DS_Store
 
